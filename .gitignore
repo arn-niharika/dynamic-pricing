@@ -1,7 +1,11 @@
 # Virtual environment
 .venv/
 
+
+
 # Data
+# In your .gitignore file (create one if missing)
+data/complete_data
 data/raw/
 data/processed/
 
@@ -18,3 +22,4 @@ __pycache__/
 # OS
 .DS_Store
 Thumbs.db
+

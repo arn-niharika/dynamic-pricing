@@ -1,0 +1,13 @@
+{"time":"2026-01-19T14:16:14.5521196+05:30","level":"INFO","msg":"stream: starting","core version":"0.24.0"}
+{"time":"2026-01-19T14:16:16.0512002+05:30","level":"INFO","msg":"stream: created new stream","id":"7zjl79up"}
+{"time":"2026-01-19T14:16:16.0542023+05:30","level":"INFO","msg":"handler: started","stream_id":"7zjl79up"}
+{"time":"2026-01-19T14:16:16.0677437+05:30","level":"INFO","msg":"stream: started","id":"7zjl79up"}
+{"time":"2026-01-19T14:16:16.0697466+05:30","level":"INFO","msg":"writer: started","stream_id":"7zjl79up"}
+{"time":"2026-01-19T14:16:16.0697466+05:30","level":"INFO","msg":"sender: started","stream_id":"7zjl79up"}
+{"time":"2026-01-19T16:26:53.6352593+05:30","level":"INFO","msg":"api: retrying error","error":"Post \"https://api.wandb.ai/files/niharikareddy6902-arnsofttech/bus-price-prediction/7zjl79up/file_stream\": read tcp 172.16.4.58:60745->35.186.228.49:443: wsarecv: An existing connection was forcibly closed by the remote host."}
+{"time":"2026-01-19T16:32:23.6282451+05:30","level":"INFO","msg":"fileTransfer: Close: file transfer manager closed"}
+{"time":"2026-01-19T16:32:24.2667342+05:30","level":"INFO","msg":"handler: operation stats","stats":{}}
+{"time":"2026-01-19T16:32:24.2845114+05:30","level":"INFO","msg":"stream: closing","id":"7zjl79up"}
+{"time":"2026-01-19T16:32:24.2845114+05:30","level":"INFO","msg":"handler: closed","stream_id":"7zjl79up"}
+{"time":"2026-01-19T16:32:24.2850183+05:30","level":"INFO","msg":"sender: closed","stream_id":"7zjl79up"}
+{"time":"2026-01-19T16:32:24.2850183+05:30","level":"INFO","msg":"stream: closed","id":"7zjl79up"}

@@ -1,0 +1,28 @@
+{
+  "os":  "Windows-10-10.0.19045-SP0",
+  "python":  "CPython 3.11.4",
+  "startedAt":  "2026-01-19T11:02:19.779981Z",
+  "program":  "c:\\Users\\Arn\\Projects\\dynamic-pricing\\notebooks\\DP_parquet (3).ipynb",
+  "codePath":  "c:\\Users\\Arn\\Projects\\dynamic-pricing\\notebooks\\DP_parquet (3).ipynb",
+  "codePathLocal":  "DP_parquet (3).ipynb",
+  "git":  {
+    "remote":  "https://github.com/arn-niharika/dynamic-pricing.git",
+    "commit":  "b7e6c1d9d0ebb175a776b18ca49967a98d337862"
+  },
+  "email":  "niharikareddy6902@gmail.com",
+  "root":  "c:\\Users\\Arn\\Projects\\dynamic-pricing\\notebooks",
+  "host":  "DESKTOP-EFI0VK9",
+  "executable":  "c:\\Users\\Arn\\Projects\\dynamic-pricing\\.venv\\Scripts\\python.exe",
+  "cpu_count":  4,
+  "cpu_count_logical":  8,
+  "disk":  {
+    "/":  {
+      "total":  "511200718848",
+      "used":  "91494645760"
+    }
+  },
+  "memory":  {
+    "total":  "16831672320"
+  },
+  "writerId":  "co5cvvb2uebhv6v2llcgpjnq0yd63xtl"
+}

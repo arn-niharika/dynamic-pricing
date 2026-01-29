@@ -1,0 +1,8 @@
+{"time":"2026-01-19T12:03:22.9739697+05:30","level":"INFO","msg":"stream: starting","core version":"0.24.0"}
+{"time":"2026-01-19T12:03:23.3998182+05:30","level":"INFO","msg":"stream: created new stream","id":"nh5ad1sh"}
+{"time":"2026-01-19T12:03:23.4000053+05:30","level":"INFO","msg":"handler: started","stream_id":"nh5ad1sh"}
+{"time":"2026-01-19T12:03:23.4025755+05:30","level":"INFO","msg":"stream: started","id":"nh5ad1sh"}
+{"time":"2026-01-19T12:03:23.4025755+05:30","level":"INFO","msg":"writer: started","stream_id":"nh5ad1sh"}
+{"time":"2026-01-19T12:03:23.4025755+05:30","level":"INFO","msg":"sender: started","stream_id":"nh5ad1sh"}
+{"time":"2026-01-19T12:23:54.8336102+05:30","level":"INFO","msg":"api: retrying error","error":"Post \"https://api.wandb.ai/files/niharikareddy6902-arnsofttech/bus-price-prediction/nh5ad1sh/file_stream\": dial tcp: lookup api.wandb.ai: no such host"}
+{"time":"2026-01-19T12:23:57.0720495+05:30","level":"INFO","msg":"api: retrying error","error":"Post \"https://api.wandb.ai/files/niharikareddy6902-arnsofttech/bus-price-prediction/nh5ad1sh/file_stream\": dial tcp: lookup api.wandb.ai: no such host"}
