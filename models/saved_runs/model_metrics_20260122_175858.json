@@ -1,0 +1,15 @@
+{
+  "model_name": "XGBoost",
+  "timestamp": "20260122_175858",
+  "metrics": {
+    "rmse_log": 0.12913057892873955,
+    "mae_log": 0.07797066958868018,
+    "r2_log": 0.8486588173162926,
+    "rmse_inr": 219.55137358322082,
+    "mae_inr": 123.56637695668182,
+    "mape_pct": 8.26724898851799
+  },
+  "training_samples": 377290,
+  "testing_samples": 66581,
+  "num_features": 24
+}

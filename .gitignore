@@ -10,7 +10,7 @@ data/raw/
 data/processed/
 
 # Models (large files)
-models/
+# models/
 
 # Notebook checkpoints
 .ipynb_checkpoints/

@@ -1,0 +1,14 @@
+{
+  "export_date": "2026-01-27 16:03:40",
+  "training_timestamp": "20260127_104450",
+  "model_type": "XGBoost",
+  "version": "1.0",
+  "num_features": 24,
+  "files": {
+    "model": "bus_price_model.pkl",
+    "encoder": "categorical_encoder.pkl",
+    "feature_engineer": "feature_engineer.pkl",
+    "feature_names": "feature_names.json",
+    "metrics": "model_metrics.json"
+  }
+}
