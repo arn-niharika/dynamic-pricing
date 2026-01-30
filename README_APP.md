@@ -112,3 +112,10 @@ This project is for demonstration purposes.
 ## Contact
 
 For questions or feedback, please contact the development team.
+
+## Prerequsites
+
+1. paste the converted  parquet data under data/complete data
+2.create venv and install all the requirements
+3.run all cells
+
