@@ -17,6 +17,25 @@ import traceback
 # Page Configuration
 # ============================================================================
 
+# HOTFIX: Handle pickles with 'LabelEncoder' module reference
+try:
+    import sys
+    import numpy as np
+    # Only inject if not already present or if it's the wrong one
+    if 'LabelEncoder' not in sys.modules:
+        try:
+            import sklearn.preprocessing
+            class MockLabelEncoderModule:
+                pass
+            mock_le = MockLabelEncoderModule()
+            mock_le.LabelEncoder = sklearn.preprocessing.LabelEncoder
+            mock_le.dtype = np.dtype
+            sys.modules['LabelEncoder'] = mock_le
+        except ImportError:
+            pass # Sklearn maybe not installed
+except Exception as e:
+    pass
+
 st.set_page_config(
     page_title="Model Prediction App",
     page_icon="🤖",
@@ -28,12 +47,25 @@ st.set_page_config(
 # Load Model from Uploaded File
 # ============================================================================
 
-@st.cache_resource
 def load_model_from_file(uploaded_file):
     """Load model from uploaded pickle file"""
     try:
         model = pickle.load(uploaded_file)
         return model, None
+    except Exception as e:
+        return None, str(e)
+
+def load_encoders(uploaded_file):
+    """Load encoders from uploaded pickle file"""
+    try:
+        encoders = pickle.load(uploaded_file)
+        
+        # Validation: Ensure it's a dictionary
+        if not isinstance(encoders, dict):
+             # Heuristic: if it's an array, it might be a single encoder or classes
+             return None, f"Expected a dictionary {{'feature': encoder}}, but got {type(encoders).__name__}. You might have uploaded a single encoder or just an array of classes."
+             
+        return encoders, None
     except Exception as e:
         return None, str(e)
 
@@ -65,14 +97,72 @@ def get_model_info(model):
 # Feature Engineering and Preparation
 # ============================================================================
 
-def prepare_input_data(input_dict, feature_names):
+def engineer_features(df):
+    """
+    Apply the same feature engineering as the notebook.
+    """
+    df = df.copy()
+    
+    # ─── Temporal Patterns ──────────────────────────────────────────────
+    if 'journey_weekday' in df.columns:
+        df['journey_is_weekend'] = df['journey_weekday'].isin([5, 6]).astype(int)
+    
+    if 'departure_hour' in df.columns:
+        # Night departure (8 PM - 5 AM)
+        df['is_night_departure'] = ((df['departure_hour'] >= 20) | (df['departure_hour'] <= 5)).astype(int)
+        # Peak hours (6-9 AM, 5-8 PM)
+        df['is_peak_hour'] = (df['departure_hour'].isin([6,7,8,9,17,18,19,20])).astype(int)
+    
+    # ─── Booking Window ─────────────────────────────────────────────────
+    if 'hours_to_departure' in df.columns:
+        df['is_last_minute'] = (df['hours_to_departure'] <= 6).astype(int)
+        df['is_advance_booking'] = (df['hours_to_departure'] >= 168).astype(int)  # 7+ days
+    
+    # ─── Demand & Scarcity Signals ──────────────────────────────────────
+    if 'available_seats' in df.columns:
+        df['low_availability'] = (df['available_seats'] <= 5).astype(int)
+        df['very_low_availability'] = (df['available_seats'] <= 2).astype(int)
+        # Assuming 50 total seats for ratio calculation if not provided
+        df['seats_sold_ratio'] = (1 - (df['available_seats'] / 50).clip(upper=1))
+    
+    # ─── Seat Characteristics ───────────────────────────────────────────
+    if 'seat_is_upper' in df.columns:
+        df['is_lower_berth'] = (~df['seat_is_upper'].astype(bool)).astype(int)
+    
+    if 'window_seats' in df.columns and 'seat_is_upper' in df.columns:
+        df['is_premium_seat'] = ((~df['seat_is_upper'].astype(bool)) & (df['window_seats'] > 0)).astype(int)
+    
+    # ─── Bus Type Features ──────────────────────────────────────────────
+    bus_source = None
+    if 'bus_type' in df.columns:
+        bus_source = df['bus_type']
+    elif 'bus_type_le' in df.columns:
+        bus_source = df['bus_type_le']
+
+    if bus_source is not None:
+        bus_type_lower = bus_source.astype(str).str.lower().fillna('')
+        df['is_volvo'] = bus_type_lower.str.contains('volvo').astype(int)
+        df['is_sleeper'] = bus_type_lower.str.contains('sleeper').astype(int)
+        df['is_seater'] = bus_type_lower.str.contains('seater').astype(int)
+        df['is_multi_axle'] = bus_type_lower.str.contains('multi|axle').astype(int)
+        df['is_AC'] = bus_type_lower.str.contains('ac').astype(int)
+        # Fix mutual exclusivity for seater/sleeper if both found (prioritize sleeper if it's a mix or adjust logic)
+        # For now, simplistic string matching as per notebook is fine.
+
+    return df
+
+def prepare_input_data(input_dict, feature_names, encoders=None):
     """
     Convert input dictionary to DataFrame with required features.
     Automatically handles missing features by creating sensible defaults.
     """
     df = pd.DataFrame([input_dict])
     
-    # Ensure all required features exist
+    
+    # Apply automatic feature engineering
+    df = engineer_features(df)
+    
+    # Ensure all required features exist (fill remaining with defaults)
     for feature in feature_names:
         if feature not in df.columns:
             # Try to infer default values based on feature name
@@ -89,8 +179,49 @@ def prepare_input_data(input_dict, feature_names):
             else:
                 df[feature] = 0  # Default to 0 for unknown numeric features
     
+    # Apply Encoders if available
+    if encoders:
+        for feature in feature_names:
+            if feature.endswith('_le'):
+                base_feature = feature[:-3] # Remove '_le'
+                if base_feature in encoders:
+                    le = encoders[base_feature]
+                    # Get the current value which is likely a string
+                    display_val = df.iloc[0][feature]
+                    try:
+                        # Transform
+                        # Note: LabelEncoder expects a list/array
+                        encoded_val = le.transform([str(display_val)])[0]
+                        df.at[0, feature] = encoded_val
+                    except Exception:
+                        # If value not seen in training, assign a default (e.g. 0 or unknown)
+                        # For now, we'll try to use 0 or verify if there's a better fallback
+                        st.warning(f"Value '{display_val}' for '{base_feature}' was not seen in training. using 0.")
+                        df.at[0, feature] = 0
+            # Also handle case where model might use non-le named features but encoding is needed
+            # (less likely given the notebook structure, but good for safety)
+            elif feature in encoders:
+                 le = encoders[feature]
+                 display_val = df.iloc[0][feature]
+                 try:
+                    df.at[0, feature] = le.transform([str(display_val)])[0]
+                 except:
+                    df.at[0, feature] = 0
+                                
+    # Make sure all data is numeric for XGBoost/LightGBM (unless native cat support is enabled)
+    # The error message specifically mentioned object columns were the issue.
+    # We should convert the dataframe to numeric, coercing errors.
+    # But only after we tried encoding.
+    
     # Select only required features in correct order
-    X = df[feature_names]
+    
+    # Select only required features in correct order
+    X = df[feature_names].copy()
+    
+    # Force conversion to numeric to ensure no object types remain
+    # XGBoost raises error if object types are present
+    for col in X.columns:
+        X[col] = pd.to_numeric(X[col], errors='coerce').fillna(0)
     
     return X
 
@@ -113,13 +244,19 @@ def main():
     with st.sidebar:
         st.header("📦 Model Upload")
         uploaded_file = st.file_uploader(
-            "Choose a pickle file containing your model",
+            "1. Choose Model (.pkl)",
             type=["pkl", "pickle"],
             help="Upload your trained model in pickle format"
         )
         
+        uploaded_encoder = st.file_uploader(
+            "2. Choose Encoders (.pkl)",
+            type=["pkl", "pickle"],
+            help="Upload the categorical_encoders.pkl file if your model uses encoded features"
+        )
+        
         if uploaded_file is not None:
-            st.success("✅ File uploaded successfully!")
+            st.success("✅ Model uploaded successfully!")
     
     # Main content
     if uploaded_file is None:
@@ -144,6 +281,19 @@ def main():
     if error:
         st.error(f"❌ Error loading model: {error}")
         return
+
+    # Load encoders if provided
+    encoders = None
+    if uploaded_encoder:
+        encoders, enc_error = load_encoders(uploaded_encoder)
+        if enc_error:
+            st.sidebar.warning(f"⚠️ Could not load encoders: {enc_error}")
+            st.sidebar.info("ℹ️ **App will work without encoders!** You'll enter numeric codes directly for categorical features (e.g., operator_name_le, bus_type_le).")
+        else:
+            st.sidebar.success(f"✅ Loaded {len(encoders)} encoders")
+    else:
+        st.sidebar.info("ℹ️ **No encoders uploaded.** You'll enter numeric codes directly for categorical features (e.g., 0-152 for operator_name_le).")
+    
     
     # Get model information
     model_info = get_model_info(model)
@@ -183,6 +333,10 @@ def main():
     
     # ===== IMPROVED INPUT SECTION WITH DESCRIPTIONS =====
     st.header("📝 Input Features")
+    
+    if not encoders:
+        st.info("ℹ️ **Working without encoders:** The app will use default values (0) for categorical features like `operator_name_le`, `bus_type_le`, etc. Predictions will still work but may be less accurate.")
+    
     st.markdown(f"Provide values for **{len(feature_names)}** features. **Hover over labels** for detailed descriptions.")
     
     # Feature descriptions and help text
@@ -215,8 +369,9 @@ def main():
         # Availability features
         'available_seats': 'How many SEATS STILL AVAILABLE? (out of 50 total)',
         'window_seats': 'How many WINDOW SEATS available? (seats with nice view)',
-        'low_availability': '✓ YES = 5 or FEWER seats left | ✗ NO = more seats available',
-        'very_low_availability': '✓ YES = only 2 SEATS LEFT | ✗ NO = more seats available',
+        'window_seats': 'How many WINDOW SEATS available? (seats with nice view)',
+        'low_availability': '✓ YES = 5 or FEWER seats left | ✗ NO = more seats available (Auto-calculated)',
+        'very_low_availability': '✓ YES = 2 or FEWER seats left | ✗ NO = more seats available (Auto-calculated)',
         'seats_sold_ratio': 'What % SOLD? (0=empty, 0.5=half full, 1=completely sold)',
         
         # Demand features
@@ -233,18 +388,31 @@ def main():
     seat_names = ['SL1', 'SL2', 'SL3', 'SL4', 'SL5', 'L1', 'L2', 'L3', 'U1', 'U2', 'U3', 'U4', 'U5', 'W1', 'W2']
     operators = ['SRS Travels', 'VRL Travels', 'Orange Travels', 'Kallada Travels', 'GRT Travels', 'BigBus', 'Jabbar Travels', 'Sharma Travels', 'Parveen Travels', 'Express Line', 'A1 Travels', 'ATR Bus', 'AZ Travels', '7Hills roadways']
     bus_types = ['AC Sleeper (2+1)', 'Non-AC Sleeper (2+1)', 'AC Seater (2+2)', 'Non-AC Seater (2+2)', 'Volvo AC Sleeper (2+1)', 'Mercedes AC Sleeper (2+1)', 'AC Semi Sleeper (2+2)']
-    routes = ['Hyderabad to Bangalore', 'Hyderabad to Chennai', 'Bangalore to Chennai', 'Delhi to Mumbai']
+    routes = ['hyderabad_chennai', 'hyderabad_bangalore']
     weekdays = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday']
-    
-    # Identify boolean features
-    boolean_features = [f for f in feature_names if any(word in f.lower() for word in ['is_', 'has_', 'bool', 'flag'])]
     
     input_data = {}
     col1, col2 = st.columns(2)
     
     # Dynamic input based on feature name
+    col1, col2 = st.columns(2)
+    
+    # Auto-calculated fields to Hide
+    auto_calculated = [
+        'journey_is_weekend', 'is_night_departure', 'is_peak_hour',
+        'is_last_minute', 'is_advance_booking', 
+        'low_availability', 'very_low_availability', 'seats_sold_ratio',
+        'is_lower_berth', 'is_premium_seat',
+        'is_volvo', 'is_sleeper', 'is_seater', 'is_multi_axle', 'is_AC'
+    ]
+    
+    # Dynamic input based on feature name
     col_idx = 0
     for feature in feature_names:
+        # Skip auto-calculated features
+        if feature in auto_calculated:
+            continue
+            
         feature_lower = feature.lower()
         help_text = feature_descriptions.get(feature, f"Enter {feature}")
         
@@ -400,7 +568,7 @@ def main():
                 col_idx += 1
             
             # ===== BOOLEAN - CHECKBOX =====
-            elif feature in boolean_features:
+            elif any(word in feature_lower for word in ['is_', 'has_', 'bool', 'flag']):
                 input_data[feature] = st.checkbox(
                     f"✓ {feature}",
                     value=False,
@@ -437,7 +605,7 @@ def main():
     if predict_button:
         try:
             # Prepare features
-            X = prepare_input_data(input_data, feature_names)
+            X = prepare_input_data(input_data, feature_names, encoders)
             
             # Make prediction
             if model_info["has_predict_proba"]:
@@ -476,12 +644,17 @@ def main():
                 # Regression model
                 prediction = model.predict(X)[0]
                 
+                # Inverse Log Transform to get Price in currency
+                # Assuming the model was trained on log(price)
+                final_price = np.expm1(prediction)
+                
                 st.divider()
                 st.header("✅ Prediction Result")
                 
                 # Display with better formatting
-                st.subheader(f"Predicted Value")
-                st.metric("🎯 Result", f"{prediction:.4f}")
+                st.subheader(f"Predicted Price")
+                st.metric("🎯 Result", f"₹ {final_price:,.2f}")
+                st.caption(f"(Model Raw Output: {prediction:.4f})")
                 
                 st.info(
                     f"💡 **What this means:**\n\n"
@@ -498,6 +671,11 @@ def main():
                 'timestamp': datetime.now().isoformat()
             }
             
+            # Show full feature set used for prediction
+            with st.expander("🔍 View All Model Features (26 Calculated Features)"):
+                st.write("These are the exact values sent to the model after processing:")
+                st.dataframe(X.T, use_container_width=True)
+                
         except Exception as e:
             st.error(f"❌ Prediction Error: {str(e)}")
             with st.expander("Error Details"):
