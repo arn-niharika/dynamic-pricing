@@ -1,0 +1,15 @@
+{
+  "model_name": "LightGBM",
+  "timestamp": "20260202_135408",
+  "metrics": {
+    "rmse_log": 0.19511459699181732,
+    "mae_log": 0.1398179288164923,
+    "r2_log": 0.7065545010279851,
+    "rmse_inr": 350.3304314389359,
+    "mae_inr": 236.93769822136122,
+    "mape_pct": 13.294773917429156
+  },
+  "training_samples": 1550312,
+  "testing_samples": 273585,
+  "num_features": 24
+}

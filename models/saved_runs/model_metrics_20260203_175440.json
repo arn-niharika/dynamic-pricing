@@ -1,0 +1,14 @@
+{
+  "model_name": "XGBoost_Batch",
+  "timestamp": "20260203_175440",
+  "metrics": {
+    "rmse": 0.3799360382857205,
+    "mae": 0.2802749273286776,
+    "r2": -0.11045350930919584,
+    "mse": 0.14435139318824847,
+    "test_samples": 1548580
+  },
+  "training_samples": "batch_mode",
+  "testing_samples": 1548580,
+  "num_features": "varies_per_batch"
+}
