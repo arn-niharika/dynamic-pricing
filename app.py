@@ -467,9 +467,9 @@ def main():
     
     # Hero Section
     st.markdown("""
-        <div style='text-align: center; padding: 0.5rem 0 1rem 0;'>
+        <div style='text-align: center'>
             <h1 style='font-size: 2.5rem; color: #000000;'>
-                🚌 Dynamic Bus Pricing
+                Dynamic Bus Pricing
             </h1>
             <p style='color: #000000; font-size: 1.1rem; margin-top: 0.3rem;'>
                 Predict bus ticket prices with AI-powered precision
@@ -613,8 +613,8 @@ def main():
     
     # ===== INPUT SECTION =====
     st.markdown("""
-        <div style='background: rgba(255,255,255,0.95); border-radius: 20px; padding: 2rem; margin: 2rem 0; box-shadow: 0 10px 40px rgba(0,0,0,0.2);'>
-            <h2 style='color: #667eea; margin-bottom: 1rem;'>📝 Journey Details</h2>
+        <div style='background: rgba(255,255,255,0.95); border-radius: 20px; padding: 2rem; margin: 0.5rem 0; box-shadow: 0 10px 40px rgba(0,0,0,0.2);'>
+            <h2 style='color: #667eea; margin-bottom: 0.5rem;'>Journey Details</h2>
             <p style='color: #666;'>Fill in the information below to get your price prediction</p>
         </div>
     """, unsafe_allow_html=True)
@@ -1985,11 +1985,11 @@ def main():
     
     # Footer
     st.markdown("<br><br>", unsafe_allow_html=True)
-    st.markdown("""
-        <div style='text-align: center; color: rgba(255,255,255,0.6); padding: 2rem;'>
-            <p>Made with ❤️ using Streamlit | Powered by Machine Learning</p>
-        </div>
-    """, unsafe_allow_html=True)
+    # st.markdown("""
+    #     <div style='text-align: center; color: rgba(255,255,255,0.6); padding: 2rem;'>
+    #         <p>Made with ❤️ using Streamlit | Powered by Machine Learning</p>
+    #     </div>
+    # """, unsafe_allow_html=True)
 
 if __name__ == "__main__":
     main()
