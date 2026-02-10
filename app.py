@@ -37,11 +37,242 @@ except Exception as e:
     pass
 
 st.set_page_config(
-    page_title="Model Prediction App",
-    page_icon="🤖",
+    page_title="Dynamic Bus Pricing Predictor",
+    page_icon="🚌",
     layout="wide",
     initial_sidebar_state="expanded"
 )
+
+# ============================================================================
+# Custom CSS for Modern UI
+# ============================================================================
+
+def inject_custom_css():
+    st.markdown("""
+    <style>
+    /* Import Google Fonts */
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+    
+    /* Global Styles */
+    * {
+        font-family: 'Inter', sans-serif;
+    }
+    
+    /* Main container */
+    .main {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        padding: 2rem;
+    }
+    
+    /* Card-like containers */
+    .stApp {
+        background: transparent;
+    }
+    
+    /* Header styling */
+    h1 {
+        color: #000000 !important;
+        font-weight: 700;
+        font-size: 2.5rem !important;
+        margin-bottom: 0.3rem;
+      
+    
+    h2 {
+        color: #ffffff;
+        font-weight: 600;
+        font-size: 1.8rem !important;
+        margin-top: 2rem;
+        margin-bottom: 1rem;
+    }
+    
+    h3 {
+        color: #e0e7ff;
+        font-weight: 500;
+        font-size: 1.3rem !important;
+    }
+    
+    /* Sidebar styling */
+    [data-testid="stSidebar"] {
+        background: linear-gradient(180deg, #1e1e2e 0%, #2d2d44 100%);
+        border-right: 1px solid rgba(255,255,255,0.1);
+    }
+    
+    [data-testid="stSidebar"] h1, 
+    [data-testid="stSidebar"] h2, 
+    [data-testid="stSidebar"] h3 {
+        color: #ffffff;
+    }
+    
+    [data-testid="stSidebar"] .stMarkdown {
+        color: #e0e7ff;
+    }
+    
+    /* Input containers */
+    .stTextInput, .stNumberInput, .stSelectbox, .stSlider, .stCheckbox {
+        background: rgba(255, 255, 255, 0.95);
+        border-radius: 12px;
+        padding: 0.5rem;
+        margin-bottom: 1rem;
+        backdrop-filter: blur(10px);
+        box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        transition: all 0.3s ease;
+    }
+    
+    .stTextInput:hover, .stNumberInput:hover, .stSelectbox:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 6px 12px rgba(0,0,0,0.15);
+    }
+    
+    /* Labels */
+    label {
+        color: #1e1e2e !important;
+        font-weight: 500 !important;
+        font-size: 0.95rem !important;
+    }
+    
+    /* Buttons */
+    .stButton > button {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        border: none;
+        border-radius: 12px;
+        padding: 0.75rem 2rem;
+        font-weight: 600;
+        font-size: 1.1rem;
+        transition: all 0.3s ease;
+        box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+    }
+    
+    .stButton > button:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 6px 20px rgba(102, 126, 234, 0.6);
+    }
+    
+    /* Metrics */
+    [data-testid="stMetricValue"] {
+        font-size: 2.5rem !important;
+        font-weight: 700 !important;
+        background: linear-gradient(120deg, #667eea 0%, #764ba2 100%);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+    }
+    
+    /* Info boxes */
+    .stAlert {
+        background: rgba(255, 255, 255, 0.95);
+        border-radius: 12px;
+        border-left: 4px solid #667eea;
+        backdrop-filter: blur(10px);
+        box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+    }
+    
+    /* Success message */
+    .element-container:has(.stSuccess) {
+        animation: slideIn 0.5s ease;
+    }
+    
+    @keyframes slideIn {
+        from {
+            opacity: 0;
+            transform: translateY(-10px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+    
+    /* Divider */
+    hr {
+        border: none;
+        height: 2px;
+        background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+        margin: 2rem 0;
+    }
+    
+    /* File uploader */
+    [data-testid="stFileUploader"] {
+        background: rgba(255, 255, 255, 0.1);
+        border-radius: 12px;
+        padding: 1rem;
+        border: 2px dashed rgba(255,255,255,0.3);
+        transition: all 0.3s ease;
+    }
+    
+    [data-testid="stFileUploader"]:hover {
+        border-color: rgba(255,255,255,0.6);
+        background: rgba(255, 255, 255, 0.15);
+    }
+    
+    /* Expander */
+    .streamlit-expanderHeader {
+        background: rgba(255, 255, 255, 0.1);
+        border-radius: 8px;
+        color: white !important;
+        font-weight: 500;
+    }
+    
+    /* Dataframe */
+    [data-testid="stDataFrame"] {
+        border-radius: 12px;
+        overflow: hidden;
+        box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+    }
+    
+    /* Caption text */
+    .stCaption {
+        color: rgba(255,255,255,0.8) !important;
+        font-size: 0.85rem !important;
+        font-style: italic;
+    }
+    
+    /* Slider */
+    .stSlider > div > div > div {
+        background: linear-gradient(90deg, #667eea 0%, #764ba2 100%);
+    }
+    
+    /* Card effect for columns */
+    .element-container {
+        animation: fadeIn 0.6s ease;
+    }
+    
+    @keyframes fadeIn {
+        from { opacity: 0; }
+        to { opacity: 1; }
+    }
+    
+    /* Result card */
+    .result-card {
+        background: rgba(255, 255, 255, 0.98);
+        border-radius: 20px;
+        padding: 2rem;
+        box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+        margin: 2rem 0;
+        animation: scaleIn 0.5s ease;
+    }
+    
+    @keyframes scaleIn {
+        from {
+            opacity: 0;
+            transform: scale(0.95);
+        }
+        to {
+            opacity: 1;
+            transform: scale(1);
+        }
+    }
+    
+    /* Checkbox */
+    .stCheckbox {
+        background: transparent !important;
+    }
+    
+    /* Select box dropdown */
+    [data-baseweb="select"] {
+        border-radius: 8px;
+    }
+    </style>
+    """, unsafe_allow_html=True)
 
 # ============================================================================
 # Load Model from Uploaded File
@@ -122,8 +353,9 @@ def engineer_features(df):
     if 'available_seats' in df.columns:
         df['low_availability'] = (df['available_seats'] <= 5).astype(int)
         df['very_low_availability'] = (df['available_seats'] <= 2).astype(int)
-        # Assuming 50 total seats for ratio calculation if not provided
-        df['seats_sold_ratio'] = (1 - (df['available_seats'] / 50).clip(upper=1))
+        # Use dynamic capacity if available, else default to 50
+        total_capacity = df.get('total_capacity', 50)
+        df['seats_sold_ratio'] = (1 - (df['available_seats'] / total_capacity).clip(upper=1))
     
     # ─── Seat Characteristics ───────────────────────────────────────────
     if 'seat_is_upper' in df.columns:
@@ -230,49 +462,95 @@ def prepare_input_data(input_dict, feature_names, encoders=None):
 # ============================================================================
 
 def main():
-    st.set_page_config(
-        page_title="Model Prediction App",
-        page_icon="🤖",
-        layout="wide",
-        initial_sidebar_state="expanded"
-    )
+    # Inject custom CSS
+    inject_custom_css()
     
-    st.title("🤖 Model Prediction App")
-    st.markdown("Upload a pickle file with your trained model and make predictions easily")
+    # Hero Section
+    st.markdown("""
+        <div style='text-align: center; padding: 0.5rem 0 1rem 0;'>
+            <h1 style='font-size: 2.5rem; color: #000000;'>
+                🚌 Dynamic Bus Pricing
+            </h1>
+            <p style='color: #000000; font-size: 1.1rem; margin-top: 0.3rem;'>
+                Predict bus ticket prices with AI-powered precision
+            </p>
+        </div>
+    """, unsafe_allow_html=True)
     
     # Sidebar for model upload
     with st.sidebar:
-        st.header("📦 Model Upload")
+        st.markdown("### 📦 Model Configuration")
+        st.markdown("---")
+        
         uploaded_file = st.file_uploader(
-            "1. Choose Model (.pkl)",
+            "Upload Trained Model",
             type=["pkl", "pickle"],
             help="Upload your trained model in pickle format"
         )
         
         uploaded_encoder = st.file_uploader(
-            "2. Choose Encoders (.pkl)",
+            "Upload Encoders (Optional)",
             type=["pkl", "pickle"],
             help="Upload the categorical_encoders.pkl file if your model uses encoded features"
         )
         
         if uploaded_file is not None:
-            st.success("✅ Model uploaded successfully!")
+            st.success("✅ Model loaded successfully!")
     
     # Main content
     if uploaded_file is None:
-        st.info("👈 **Please upload a model pickle file to get started.**")
+        # Welcome screen with better structure
         st.markdown("""
-        ### How to use this app:
-        1. **Upload a Model**: Click the file uploader on the left to select your trained model (in `.pkl` format)
-        2. **Enter Features**: Provide values for the features your model expects
-        3. **Get Predictions**: Click the predict button to see results
+            <div style='background: rgba(255,255,255,0.95); border-radius: 20px; padding: 2rem; margin: 2rem 0; box-shadow: 0 10px 40px rgba(0,0,0,0.2);'>
+                <h2 style='color: #667eea; text-align: center; margin-bottom: 2rem;'>Welcome to the Bus Pricing Predictor</h2>
+            </div>
+        """, unsafe_allow_html=True)
         
-        ### Supported Models:
-        - ✅ XGBoost, LightGBM, CatBoost
-        - ✅ Scikit-learn (RandomForest, LinearRegression, LogisticRegression, etc.)
-        - ✅ Neural Networks (Keras/TensorFlow)
-        - ✅ Any custom Python model with `predict()` method
-        """)
+        # Step-by-step guide using Streamlit columns
+        st.markdown("<br>", unsafe_allow_html=True)
+        col1, col2, col3 = st.columns(3)
+        
+        with col1:
+            st.markdown("""
+                <div style='background: rgba(255,255,255,0.9); border-radius: 15px; padding: 2rem; text-align: center; box-shadow: 0 4px 6px rgba(0,0,0,0.1); height: 250px;'>
+                    <div style='font-size: 3.5rem; margin-bottom: 1rem;'>📤</div>
+                    <h3 style='color: #764ba2; font-size: 1.2rem; margin-bottom: 0.5rem;'>Step 1: Upload Model</h3>
+                    <p style='color: #666; font-size: 0.95rem;'>Select your trained model file from the sidebar</p>
+                </div>
+            """, unsafe_allow_html=True)
+        
+        with col2:
+            st.markdown("""
+                <div style='background: rgba(255,255,255,0.9); border-radius: 15px; padding: 2rem; text-align: center; box-shadow: 0 4px 6px rgba(0,0,0,0.1); height: 250px;'>
+                    <div style='font-size: 3.5rem; margin-bottom: 1rem;'>✍️</div>
+                    <h3 style='color: #764ba2; font-size: 1.2rem; margin-bottom: 0.5rem;'>Step 2: Enter Details</h3>
+                    <p style='color: #666; font-size: 0.95rem;'>Fill in journey and bus information</p>
+                </div>
+            """, unsafe_allow_html=True)
+        
+        with col3:
+            st.markdown("""
+                <div style='background: rgba(255,255,255,0.9); border-radius: 15px; padding: 2rem; text-align: center; box-shadow: 0 4px 6px rgba(0,0,0,0.1); height: 250px;'>
+                    <div style='font-size: 3.5rem; margin-bottom: 1rem;'>🎯</div>
+                    <h3 style='color: #764ba2; font-size: 1.2rem; margin-bottom: 0.5rem;'>Step 3: Get Prediction</h3>
+                    <p style='color: #666; font-size: 0.95rem;'>Receive instant price predictions</p>
+                </div>
+            """, unsafe_allow_html=True)
+        
+        # Features section
+        st.markdown("<br><br>", unsafe_allow_html=True)
+        st.markdown("""
+            <div style='background: rgba(255,255,255,0.95); border-radius: 20px; padding: 2.5rem; margin: 2rem 0; box-shadow: 0 10px 40px rgba(0,0,0,0.2);'>
+                <h3 style='color: #667eea; margin-bottom: 1.5rem; font-size: 1.5rem;'>✨ Features</h3>
+                <div style='color: #666; line-height: 2.2; font-size: 1.05rem;'>
+                    🤖 <strong>AI-powered price predictions</strong> - Advanced machine learning models<br>
+                    📊 <strong>Smart feature engineering</strong> - Automatic calculation of derived features<br>
+                    🎨 <strong>Beautiful, intuitive interface</strong> - Modern design for better experience<br>
+                    ⚡ <strong>Real-time calculations</strong> - Instant predictions with no delays<br>
+                    🔒 <strong>Secure and private</strong> - Your data stays on your machine
+                </div>
+            </div>
+        """, unsafe_allow_html=True)
         return
     
     # Load the model
@@ -288,11 +566,11 @@ def main():
         encoders, enc_error = load_encoders(uploaded_encoder)
         if enc_error:
             st.sidebar.warning(f"⚠️ Could not load encoders: {enc_error}")
-            st.sidebar.info("ℹ️ **App will work without encoders!** You'll enter numeric codes directly for categorical features (e.g., operator_name_le, bus_type_le).")
+            st.sidebar.info("ℹ️ App will work without encoders! You'll enter numeric codes directly.")
         else:
             st.sidebar.success(f"✅ Loaded {len(encoders)} encoders")
     else:
-        st.sidebar.info("ℹ️ **No encoders uploaded.** You'll enter numeric codes directly for categorical features (e.g., 0-152 for operator_name_le).")
+        st.sidebar.info("ℹ️ No encoders uploaded. Using default encoding.")
     
     
     # Get model information
@@ -300,24 +578,30 @@ def main():
     
     # Display model information in sidebar
     with st.sidebar:
-        st.divider()
-        st.header("📊 Model Details")
-        st.write(f"**Type:** {model_info['type']}")
-        st.write(f"**Library:** {model_info['module']}")
-        if "n_features" in model_info:
-            st.write(f"**Expected Features:** {model_info['n_features']}")
-        if model_info.get("has_predict"):
-            st.write("**Prediction Type:** ✅ Regression" if not model_info.get("has_predict_proba") else "**Prediction Type:** ✅ Classification")
+        st.markdown("---")
+        st.markdown("### 📊 Model Information")
+        
+        st.markdown(f"""
+            <div style='background: rgba(255,255,255,0.1); padding: 1rem; border-radius: 8px; margin-top: 1rem;'>
+                <p style='margin: 0.5rem 0; color: black;'><strong>Type:</strong> {model_info['type']}</p>
+                <p style='margin: 0.5rem 0; color: black;'><strong>Library:</strong> {model_info['module'].split('.')[0]}</p>
+                <p style='margin: 0.5rem 0; color: black;'><strong>Features:</strong> {model_info.get('n_features', 'N/A')}</p>
+            </div>
+        """, unsafe_allow_html=True)
     
     # Get feature names
     feature_names = model_info.get("feature_names", [])
+
+    # Check for missing encoders
+    if encoders is None and any(f.endswith('_le') for f in feature_names):
+        st.warning("⚠️ Model uses encoded features (ending in _le) but no encoders were uploaded. These features will default to 0, which may affect prediction accuracy. Please upload 'categorical_encoders.pkl'.")
     
     if not feature_names:
         st.warning("⚠️ Could not automatically detect feature names from the model.")
-        st.markdown("**Option 1**: Enter feature names manually (comma-separated)")
+        st.markdown("**Please enter feature names manually (comma-separated)**")
         manual_features = st.text_input(
             "Feature names",
-            help="Enter feature names separated by commas, e.g., age,income,credit_score"
+            help="Enter feature names separated by commas"
         )
         
         if manual_features:
@@ -326,384 +610,1386 @@ def main():
         else:
             st.info("👈 Please provide feature names to continue")
             return
-    else:
-        st.success(f"✅ Detected {len(feature_names)} features from model")
-        with st.expander("View feature names"):
-            st.write(feature_names)
     
-    # ===== IMPROVED INPUT SECTION WITH DESCRIPTIONS =====
-    st.header("📝 Input Features")
-    
-    if not encoders:
-        st.info("ℹ️ **Working without encoders:** The app will use default values (0) for categorical features like `operator_name_le`, `bus_type_le`, etc. Predictions will still work but may be less accurate.")
-    
-    st.markdown(f"Provide values for **{len(feature_names)}** features. **Hover over labels** for detailed descriptions.")
+    # ===== INPUT SECTION =====
+    st.markdown("""
+        <div style='background: rgba(255,255,255,0.95); border-radius: 20px; padding: 2rem; margin: 2rem 0; box-shadow: 0 10px 40px rgba(0,0,0,0.2);'>
+            <h2 style='color: #667eea; margin-bottom: 1rem;'>📝 Journey Details</h2>
+            <p style='color: #666;'>Fill in the information below to get your price prediction</p>
+        </div>
+    """, unsafe_allow_html=True)
     
     # Feature descriptions and help text
     feature_descriptions = {
         # Seat features
-        'seat_is_seater': '✓ Regular SEATING (like airplane) | ✗ BED/SLEEPER (like train)',
-        'seat_is_upper': '✓ UPPER BUNK (top bed) | ✗ LOWER BUNK (bottom bed)',
-        'seat_is_ladies': '✓ RESERVED FOR WOMEN | ✗ General seat for anyone',
-        'seat_is_horizontal': '✓ LYING DOWN (horizontal bed) | ✗ Sitting upright',
-        'seat_is_available': '✓ AVAILABLE TO BOOK | ✗ Already sold/booked',
-        'seat_name': 'Your SEAT CODE (e.g., SL1, U5, L3) - SL=Sleeper-Lower, U=Upper, L=Lower, W=Window',
-        'seat_name_le': 'Pick your SEAT CODE from dropdown',
+        'seat_is_seater': 'Regular seating (like airplane) vs bed/sleeper (like train)',
+        'seat_is_upper': 'Upper bunk (top bed) vs lower bunk (bottom bed)',
+        'seat_is_ladies': 'Reserved for women vs general seat',
+        'seat_is_horizontal': 'Lying down (horizontal bed) vs sitting upright',
+        'seat_is_available': 'Available to book vs already sold',
+        'seat_name': 'Your seat code (e.g., SL1, U5, L3)',
+        'seat_name_le': 'Select your seat from the dropdown',
         
         # Journey features
-        'journey_weekday': 'Pick which day (Monday-Sunday)',
-        'departure_hour': 'What TIME does bus leave? (00:00 to 23:00)',
-        'hours_to_departure': 'How many HOURS from NOW until departure?',
-        'days_to_journey': 'How many DAYS from TODAY? (advance booking)',
-        'duration_hours': 'How LONG is the journey? (in hours)',
-        'scrape_hour': 'What is the CURRENT HOUR? (0=midnight, 12=noon, 18=evening)',
+        'journey_weekday': 'Day of the week for your journey',
+        'departure_hour': 'What time does the bus leave?',
+        'hours_to_departure': 'How many hours until departure?',
+        'days_to_journey': 'How many days in advance are you booking?',
+        'duration_hours': 'How long is the journey?',
+        'scrape_hour': 'Current hour (for booking time analysis)',
         
         # Bus features
-        'operator_name': 'Which BUS COMPANY?',
-        'operator_name_le': 'Pick BUS COMPANY from list',
-        'bus_type': 'What TYPE of bus? (AC/Non-AC, Sleeper/Seater)',
-        'bus_type_le': 'Pick BUS TYPE from list',
-        'source_collection': 'Which ROUTE? (Hyderabad-Bangalore, etc.)',
-        'source_collection_le': 'Pick ROUTE from list',
+        'operator_name': 'Bus company/operator',
+        'operator_name_le': 'Select bus company',
+        'bus_type': 'Type of bus (AC/Non-AC, Sleeper/Seater)',
+        'bus_type_le': 'Select bus type',
+        'source_collection': 'Route (e.g., Hyderabad-Bangalore)',
+        'source_collection_le': 'Select route',
         
         # Availability features
-        'available_seats': 'How many SEATS STILL AVAILABLE? (out of 50 total)',
-        'window_seats': 'How many WINDOW SEATS available? (seats with nice view)',
-        'window_seats': 'How many WINDOW SEATS available? (seats with nice view)',
-        'low_availability': '✓ YES = 5 or FEWER seats left | ✗ NO = more seats available (Auto-calculated)',
-        'very_low_availability': '✓ YES = 2 or FEWER seats left | ✗ NO = more seats available (Auto-calculated)',
-        'seats_sold_ratio': 'What % SOLD? (0=empty, 0.5=half full, 1=completely sold)',
-        
-        # Demand features
-        'is_lower_berth': '✓ LOWER BED (bottom, usually more expensive) | ✗ Upper bed',
-        'is_premium_seat': '✓ PREMIUM = Lower bed + Window view (BEST SEATS) | ✗ Regular',
-        'is_AC': '✓ AIR-CONDITIONED (cool) | ✗ Non-AC (hot)',
-        'is_sleeper': '✓ SLEEPER/BED seats | ✗ Normal sitting seats',
-        'is_volvo': '✓ LUXURY Volvo/Premium brand | ✗ Regular bus',
-        'is_night_departure': '✓ Leaves at NIGHT (8PM-5AM) | ✗ Day time',
-        'journey_is_weekend': '✓ WEEKEND trip (Sat/Sun) | ✗ Weekday trip',
+        'available_seats': 'Number of seats still available',
+        'window_seats': 'Number of window seats available',
     }
     
     # Predefined options
-    seat_names = ['SL1', 'SL2', 'SL3', 'SL4', 'SL5', 'L1', 'L2', 'L3', 'U1', 'U2', 'U3', 'U4', 'U5', 'W1', 'W2']
-    operators = ['SRS Travels', 'VRL Travels', 'Orange Travels', 'Kallada Travels', 'GRT Travels', 'BigBus', 'Jabbar Travels', 'Sharma Travels', 'Parveen Travels', 'Express Line', 'A1 Travels', 'ATR Bus', 'AZ Travels', '7Hills roadways']
-    bus_types = ['AC Sleeper (2+1)', 'Non-AC Sleeper (2+1)', 'AC Seater (2+2)', 'Non-AC Seater (2+2)', 'Volvo AC Sleeper (2+1)', 'Mercedes AC Sleeper (2+1)', 'AC Semi Sleeper (2+2)']
-    routes = ['hyderabad_chennai', 'hyderabad_bangalore']
+    seat_names = [
+                "0",
+                "01LW",
+                "02L",
+                "03L",
+                "03UW",
+                "04LW",
+                "05L",
+                "06L",
+                "06UW",
+                "07LW",
+                "08L",
+                "09L",
+                "09UW",
+                "1",
+                "10",
+                "10ALB",
+                "10AUB",
+                "10B",
+                "10BLB",
+                "10BUB",
+                "10C",
+                "10L",
+                "10LW",
+                "10U",
+                "10UW",
+                "10W",
+                "11",
+                "11ALB",
+                "11AUB",
+                "11B",
+                "11BLB",
+                "11BUB",
+                "11C",
+                "11L",
+                "11U",
+                "11W",
+                "12",
+                "12ALB",
+                "12AUB",
+                "12B",
+                "12BLB",
+                "12BUB",
+                "12C",
+                "12L",
+                "12U",
+                "12UW",
+                "12W",
+                "13",
+                "13ALB",
+                "13AUB",
+                "13BLB",
+                "13BUB",
+                "13L",
+                "13LW",
+                "13U",
+                "13UW",
+                "13W",
+                "14",
+                "14L",
+                "14U",
+                "14W",
+                "15",
+                "15L",
+                "15U",
+                "15UW",
+                "15W",
+                "16",
+                "16L",
+                "16LW",
+                "16U",
+                "16UW",
+                "16W",
+                "17",
+                "17L",
+                "17U",
+                "17W",
+                "18",
+                "18L",
+                "18U",
+                "18UW",
+                "18W",
+                "19",
+                "19L",
+                "19W",
+                "1A",
+                "1B",
+                "1C",
+                "1D",
+                "1E",
+                "1F",
+                "1G",
+                "1L",
+                "1LA",
+                "1LB",
+                "1LC",
+                "1LDA",
+                "1LDB",
+                "1LS",
+                "1U",
+                "1UA",
+                "1UB",
+                "1UC",
+                "1UDA",
+                "1UDB",
+                "1US",
+                "1UW",
+                "1W",
+                "2",
+                "20",
+                "20L",
+                "20W",
+                "21",
+                "21L",
+                "21W",
+                "22",
+                "22U",
+                "22W",
+                "23",
+                "23U",
+                "23W",
+                "24",
+                "24U",
+                "24W",
+                "25",
+                "25L",
+                "26",
+                "26L",
+                "26W",
+                "27",
+                "27L",
+                "27W",
+                "28",
+                "28U",
+                "29",
+                "29U",
+                "2A",
+                "2B",
+                "2C",
+                "2D",
+                "2E",
+                "2F",
+                "2G",
+                "2L",
+                "2LA",
+                "2LB",
+                "2LC",
+                "2LDA",
+                "2LDB",
+                "2LS",
+                "2U",
+                "2UA",
+                "2UB",
+                "2UC",
+                "2UDA",
+                "2UDB",
+                "2US",
+                "2W",
+                "3",
+                "30",
+                "30U",
+                "30W",
+                "31",
+                "31L",
+                "31W",
+                "32",
+                "32L",
+                "33",
+                "33L",
+                "34",
+                "34U",
+                "34W",
+                "35",
+                "35U",
+                "35W",
+                "36",
+                "36U",
+                "37",
+                "38",
+                "39",
+                "39W",
+                "3A",
+                "3B",
+                "3C",
+                "3D",
+                "3E",
+                "3F",
+                "3G",
+                "3L",
+                "3LA",
+                "3LB",
+                "3LC",
+                "3LDA",
+                "3LDB",
+                "3LS",
+                "3U",
+                "3UA",
+                "3UB",
+                "3UC",
+                "3UDA",
+                "3UDB",
+                "3US",
+                "3W",
+                "4",
+                "40",
+                "41",
+                "42",
+                "43",
+                "44",
+                "45",
+                "4A",
+                "4B",
+                "4C",
+                "4D",
+                "4E",
+                "4F",
+                "4G",
+                "4L",
+                "4LA",
+                "4LB",
+                "4LC",
+                "4LDA",
+                "4LDB",
+                "4LS",
+                "4U",
+                "4UA",
+                "4UB",
+                "4UC",
+                "4UDA",
+                "4UDB",
+                "4US",
+                "4UW",
+                "4W",
+                "5",
+                "5A",
+                "5B",
+                "5C",
+                "5D",
+                "5E",
+                "5F",
+                "5G",
+                "5L",
+                "5LA",
+                "5LB",
+                "5LC",
+                "5LDA",
+                "5LDB",
+                "5LS",
+                "5U",
+                "5UA",
+                "5UB",
+                "5UC",
+                "5UDA",
+                "5UDB",
+                "5US",
+                "5W",
+                "6",
+                "6A",
+                "6ALB",
+                "6AUB",
+                "6B",
+                "6BLB",
+                "6BUB",
+                "6C",
+                "6D",
+                "6E",
+                "6F",
+                "6G",
+                "6L",
+                "6LA",
+                "6LB",
+                "6LC",
+                "6LDA",
+                "6LDB",
+                "6LS",
+                "6U",
+                "6UA",
+                "6UB",
+                "6UC",
+                "6UDA",
+                "6UDB",
+                "6US",
+                "6W",
+                "7",
+                "7ALB",
+                "7AUB",
+                "7B",
+                "7BLB",
+                "7BUB",
+                "7C",
+                "7L",
+                "7LB",
+                "7LDA",
+                "7LDB",
+                "7LS",
+                "7U",
+                "7UB",
+                "7UDA",
+                "7UDB",
+                "7US",
+                "7UW",
+                "7W",
+                "8",
+                "8ALB",
+                "8AUB",
+                "8B",
+                "8BLB",
+                "8BUB",
+                "8C",
+                "8L",
+                "8U",
+                "8W",
+                "9",
+                "9ALB",
+                "9AUB",
+                "9B",
+                "9BLB",
+                "9BUB",
+                "9C",
+                "9L",
+                "9U",
+                "9W",
+                "A",
+                "A1",
+                "A10",
+                "A11",
+                "A12",
+                "A13",
+                "A1K1",
+                "A1Q1",
+                "A2",
+                "A2K7",
+                "A2Q7",
+                "A3",
+                "A4",
+                "A5",
+                "A6",
+                "A7",
+                "A8",
+                "A9",
+                "B",
+                "B1",
+                "B10",
+                "B11",
+                "B12",
+                "B13",
+                "B1K2",
+                "B1Q2",
+                "B2",
+                "B2K8",
+                "B2Q8",
+                "B3",
+                "B4",
+                "B5",
+                "B6",
+                "B7",
+                "B8",
+                "B9",
+                "C",
+                "C1",
+                "C10",
+                "C11",
+                "C12",
+                "C13",
+                "C1K3",
+                "C1Q3",
+                "C2",
+                "C2K9",
+                "C2Q9",
+                "C3",
+                "C4",
+                "C5",
+                "C6",
+                "C7",
+                "C8",
+                "C9",
+                "D",
+                "D1",
+                "D10",
+                "D11",
+                "D12",
+                "D13",
+                "D1K4",
+                "D1Q4",
+                "D2",
+                "D2K10",
+                "D2Q10",
+                "D3",
+                "D4",
+                "D5",
+                "D6",
+                "D7",
+                "D8",
+                "D9",
+                "DL1",
+                "DL10",
+                "DL11",
+                "DL12",
+                "DL13",
+                "DL14",
+                "DL2",
+                "DL3",
+                "DL4",
+                "DL5",
+                "DL6",
+                "DL7",
+                "DL8",
+                "DL9",
+                "DU1",
+                "DU10",
+                "DU11",
+                "DU12",
+                "DU13",
+                "DU14",
+                "DU2",
+                "DU3",
+                "DU4",
+                "DU5",
+                "DU6",
+                "DU7",
+                "DU8",
+                "DU9",
+                "E",
+                "E1",
+                "E1K5",
+                "E1Q5",
+                "E2",
+                "E2K11",
+                "E2Q11",
+                "E3",
+                "E4",
+                "E5",
+                "E6",
+                "F",
+                "F1",
+                "F1K6",
+                "F1Q6",
+                "F2",
+                "F2K12",
+                "F2Q12",
+                "F3",
+                "F4",
+                "F5",
+                "F6",
+                "G",
+                "G1",
+                "G2",
+                "G3",
+                "G4",
+                "G5",
+                "G6",
+                "H",
+                "H1",
+                "H2",
+                "H3",
+                "H4",
+                "I",
+                "I1",
+                "I2",
+                "I3",
+                "I4",
+                "I5",
+                "J",
+                "J1",
+                "J12",
+                "J13",
+                "J2",
+                "J3",
+                "J4",
+                "J5",
+                "K",
+                "K1",
+                "K2",
+                "K3",
+                "K4",
+                "L",
+                "L1",
+                "L10",
+                "L10W",
+                "L11",
+                "L12",
+                "L12W",
+                "L13",
+                "L14",
+                "L15",
+                "L16",
+                "L17",
+                "L18",
+                "L19",
+                "L2",
+                "L20",
+                "L21",
+                "L22",
+                "L23",
+                "L24",
+                "L25",
+                "L26",
+                "L27",
+                "L28",
+                "L29",
+                "L2W",
+                "L3",
+                "L30",
+                "L31",
+                "L32",
+                "L33",
+                "L35",
+                "L37",
+                "L38",
+                "L39",
+                "L4",
+                "L41",
+                "L4W",
+                "L5",
+                "L6",
+                "L6W",
+                "L7",
+                "L8",
+                "L8W",
+                "L9",
+                "LD1",
+                "LD10",
+                "LD11",
+                "LD12",
+                "LD13",
+                "LD14",
+                "LD15",
+                "LD16",
+                "LD17",
+                "LD18",
+                "LD19",
+                "LD2",
+                "LD20",
+                "LD21",
+                "LD2W",
+                "LD3",
+                "LD4",
+                "LD4W",
+                "LD5",
+                "LD6",
+                "LD6W",
+                "LD7",
+                "LD8",
+                "LD8W",
+                "LD9",
+                "LS1",
+                "LS2",
+                "LS3",
+                "LS4",
+                "LS5",
+                "LU1",
+                "LU2",
+                "LU3",
+                "LU4",
+                "LU5",
+                "M",
+                "M1",
+                "M2",
+                "M3",
+                "N",
+                "N1",
+                "N2",
+                "O",
+                "P",
+                "Q",
+                "R",
+                "R1",
+                "R10",
+                "R11",
+                "R12",
+                "R13",
+                "R14",
+                "R15",
+                "R16",
+                "R17",
+                "R18",
+                "R19",
+                "R2",
+                "R20",
+                "R21",
+                "R22",
+                "R23",
+                "R24",
+                "R25",
+                "R26",
+                "R3",
+                "R4",
+                "R5",
+                "R6",
+                "R7",
+                "R8",
+                "R9",
+                "RL1",
+                "RL10",
+                "RL11",
+                "RL12",
+                "RL2",
+                "RL3",
+                "RL4",
+                "RL5",
+                "RL6",
+                "RL7",
+                "RL8",
+                "RL9",
+                "RU1",
+                "RU10",
+                "RU11",
+                "RU12",
+                "RU2",
+                "RU3",
+                "RU4",
+                "RU5",
+                "RU6",
+                "RU7",
+                "RU8",
+                "RU9",
+                "S",
+                "S1",
+                "S10",
+                "S11",
+                "S12",
+                "S13",
+                "S14",
+                "S15",
+                "S16",
+                "S17",
+                "S18",
+                "S19",
+                "S2",
+                "S20",
+                "S21",
+                "S22",
+                "S23",
+                "S24",
+                "S25",
+                "S26",
+                "S27",
+                "S28",
+                "S29",
+                "S3",
+                "S30",
+                "S31",
+                "S32",
+                "S33",
+                "S34",
+                "S35",
+                "S36",
+                "S4",
+                "S47",
+                "S5",
+                "S6",
+                "S7",
+                "S8",
+                "S9",
+                "SL1",
+                "SL10",
+                "SL12",
+                "SL13",
+                "SL15",
+                "SL2",
+                "SL3",
+                "SL4",
+                "SL5",
+                "SL6",
+                "SL7",
+                "SL9",
+                "SU1",
+                "SU10",
+                "SU12",
+                "SU13",
+                "SU15",
+                "SU2",
+                "SU3",
+                "SU4",
+                "SU5",
+                "SU6",
+                "SU7",
+                "SU9",
+                "T",
+                "U",
+                "U1",
+                "U10",
+                "U11",
+                "U12",
+                "U12W",
+                "U13",
+                "U14",
+                "U14W",
+                "U15",
+                "U15W",
+                "U16",
+                "U17",
+                "U18",
+                "U18W",
+                "U19",
+                "U2",
+                "U20",
+                "U21",
+                "U22",
+                "U23",
+                "U24",
+                "U25",
+                "U26",
+                "U27",
+                "U28",
+                "U29",
+                "U3",
+                "U30",
+                "U31",
+                "U33",
+                "U34",
+                "U35",
+                "U36",
+                "U37",
+                "U3W",
+                "U4",
+                "U40",
+                "U41",
+                "U42",
+                "U5",
+                "U6",
+                "U6W",
+                "U7",
+                "U8",
+                "U9",
+                "U9W",
+                "UA1",
+                "UA2",
+                "UA3",
+                "UA4",
+                "UA5",
+                "UA6",
+                "UD1",
+                "UD10",
+                "UD11",
+                "UD12",
+                "UD13",
+                "UD14",
+                "UD15",
+                "UD16",
+                "UD17",
+                "UD18",
+                "UD19",
+                "UD2",
+                "UD20",
+                "UD21",
+                "UD2W",
+                "UD3",
+                "UD4",
+                "UD4W",
+                "UD5",
+                "UD6",
+                "UD6W",
+                "UD7",
+                "UD8",
+                "UD8W",
+                "UD9",
+                "US1",
+                "US2",
+                "US3",
+                "US4",
+                "US5",
+                "US6",
+                "V",
+                "V1",
+                "V10",
+                "V11",
+                "V12",
+                "V2",
+                "V3",
+                "V4",
+                "V5",
+                "V6",
+                "V7",
+                "V8",
+                "V9",
+                "W",
+                "X",
+                "Y",
+                "Z"
+            ]
+    operators = [
+                "7Hills roadways",
+                "A1 Transports",
+                "A1 Travels",
+                "ATR Bus",
+                "AVM Tours And Travels",
+                "AZ Travels",
+                "Anmol Tours & Travels",
+                "B R Travels",
+                "BMCC Travels",
+                "BR Travels",
+                "BSR TOURS & TRAVELS",
+                "BSR Tours And Travels",
+                "BTR Travels",
+                "Balaji Cabs",
+                "Basanth Tours",
+                "Bharathi Travels",
+                "Big Bus",
+                "BigBus",
+                "Bmcc Travels",
+                "CMR Express",
+                "Choudhary Travels Bhilwara",
+                "DEGA TRAVELS",
+                "DNR Express",
+                "Dakshin Travels",
+                "Delta Transport Pvt Ltd",
+                "Delta Transports Pvt Ltd",
+                "Dhanunjaya Travels",
+                "Dream Line Travels Pvt Ltd",
+                "Dreamlinetravels pvt ltd",
+                "EXPRESS LINE",
+                "Express Line",
+                "Flixbus",
+                "GAJRAJ BUS SERVICE ",
+                "GEE PEE TRAVELS",
+                "GPM Travels",
+                "GRT Travels",
+                "Gajraj bus service",
+                "Geepee Travels",
+                "Go Tour Travels And Holidays",
+                "Go Tour Travels and Holidays",
+                "HASH BUS",
+                "Highline Transports",
+                "IRA TRANSPORTS",
+                "Intercity travels",
+                "IntrCity SmartBus",
+                "Ira Transport",
+                "J J YATRA",
+                "JAI MARUTHI TRAVELS",
+                "Jabbar  Travels",
+                "Jabbar Travels",
+                "K.L.A Travels",
+                "KAMAKSHI TOURS AND TRAVELS",
+                "KBN Travels",
+                "KGN INDIA",
+                "KKaveri Travels",
+                "KSM Roadlines",
+                "KSM Roadways",
+                "KVR Tours and Travels",
+                "Kallada Tours and Travels",
+                "Kallada Tours and Travels (VKLDA)",
+                "Kallada Travels (Suresh Kallada)",
+                "Kamakshi Tours And Travels",
+                "Kaveri Tours and Travels",
+                "Kaveri Travels",
+                "Khaja Sardar Travels Hyd",
+                "LVP Travels",
+                "MMK Travels",
+                "MRM Travels",
+                "MSM Tours & Travels",
+                "Medikonda Travels",
+                "Medikonda Trravels",
+                "Meghana Travels",
+                "Morning Star Travels",
+                "Mythri Tours And Travels",
+                "N S Holidays",
+                "NWAY HOLIDAYS",
+                "National  travels",
+                "National Travels(nts)",
+                "Naveen Transport",
+                "Naveen Travels (Durg)",
+                "Northern Travels",
+                "November Travels",
+                "Orange Tours and Travels",
+                "POOJA TRAVELS NAGPUR",
+                "Pooja Travels (Nagpur)",
+                "Pramukh Travels",
+                "RAJESH TRANSPORTS",
+                "RMS Transports",
+                "Rajdhani Travels",
+                "Rajdhani Travels (rjds)",
+                "Rajesh Transports",
+                "Raj’s Travels and Transports",
+                "Ram Dalal Holidays Pvt Ltd",
+                "Ramana Tours And Travels",
+                "Ramana Travels",
+                "Renuka Bus Service",
+                "Royal Rich India",
+                "Royal Rich India R No. 208",
+                "S L Travels",
+                "S.L  Travels",
+                "SHYAMOLI PARIBAHAN PRIVATE LIMITED",
+                "SL Travels",
+                "SLC Road Lines",
+                "SREE KVR TRAVELS",
+                "SRI SVR travels",
+                "SRS TRAVELS",
+                "SRS Travels(srsr)",
+                "STREAMLINE TOURS AND TRAVELS",
+                "SVR Tours and Travels",
+                "Saleem Tours and Travels",
+                "Saleem Travels",
+                "Saleem Travels (Hyderabad)",
+                "Shama Sardar Travels HPM",
+                "Shree Savariya Travels & Transport",
+                "Shyamoli Paribahan Pvt Ltd",
+                "Siva AMR Tours and Travels",
+                "Skyline Transport",
+                "Skyline Transports",
+                "Sree Rama Tours & Travels",
+                "Sri K.V.R Travels",
+                "Sri KVR Travels",
+                "Sri Krishna Travels",
+                "Sri Sai Anjana Tours & Travels",
+                "Sri Sai Anjana Tours and Travels",
+                "Sri Tulasi Tours and Travels",
+                "Streamline tours and travels",
+                "Sugama  Tourist",
+                "Sugama  Tourists",
+                "Swamy Ayyappa Travels",
+                "TVK TRAVELS",
+                "TVK Travels",
+                "Tranz India",
+                "Tranzindia Travels",
+                "Travel Point World LLP",
+                "UNIVERSAL TRANSPORT SERVICE (UTS)",
+                "Universal Bus( UTS)",
+                "V Kaveri Travels",
+                "VKV Travels",
+                "VKaveri Travels",
+                "VRL Travel",
+                "VRL Travels",
+                "VSR Tours and Travels",
+                "Vasireddy Travels",
+                "Vega Bus",
+                "Vega Bus (hyderabad)",
+                "Vikram Travels",
+                "YAS Tours & Travels",
+                "YAS Travels",
+                "YOLOBUS",
+                "Yolo Bus",
+                "zingbus Maxx",
+                "zingbus maxx",
+                "zingbus plus"
+            ]
+    bus_types = [
+                "A/C Seater / Sleeper (2+1)",
+                "A/C Seater / Sleeper (2+2)",
+                "A/C Seater/Sleeper (2+1)",
+                "A/C Sleeper",
+                "A/C Sleeper (2+1)",
+                "A/C Volvo B11R Multi-Axle Sleeper (2+1)",
+                "A/C, Seater Semi Sleeper, Premium Ishift, Multi Axle",
+                "A/C, Seater Sleeper",
+                "A/C, Seater Sleeper, Bharat Benz",
+                "A/C, Seater Sleeper, Deluxe",
+                "A/C, Seater Sleeper, Premium",
+                "A/C, Semi Sleeper, Premium",
+                "A/C, Semi Sleeper, Premium, Multi Axle",
+                "A/C, Semi Sleeper, Scania, Multi Axle",
+                "A/C, Sleeper",
+                "A/C, Sleeper, Bharat Benz",
+                "A/C, Sleeper, Bharat Benz Business Class",
+                "A/C, Sleeper, Deluxe",
+                "A/C, Sleeper, Mercedes Benz",
+                "A/C, Sleeper, Premium",
+                "A/C, Sleeper, Premium B9r Multi Axle, Multi Axle",
+                "A/C, Sleeper, Premium Ishift B11r, Multi Axle",
+                "A/C, Sleeper, Premium Ishift, Multi Axle",
+                "A/C, Sleeper, Premium, Multi Axle",
+                "A/C, Sleeper, Scania",
+                "A/C, Sleeper, Scania, Multi Axle",
+                "AC Sleeper (2+1)",
+                "Benz A/C Sleeper (2+1)",
+                "Bharat Benz A/C Seater /Sleeper (2+1)",
+                "Bharat Benz A/C Sleeper (1+1)",
+                "Bharat Benz A/C Sleeper (2+1)",
+                "Bharat Benz NON A/C Seater / Sleeper (2+1)",
+                "Mercedes Benz A/C Sleeper (2+1)",
+                "Mercedes Benz Multi-Axle A/C Sleeper (2+1)",
+                "NON A/C Seater Push Back (2+2)",
+                "NON A/C Sleeper (2+1)",
+                "NON AC Seater / Sleeper 2+1",
+                "Non A/C Seater / Sleeper (2+1)",
+                "Non A/C, Seater",
+                "Non A/C, Seater Sleeper",
+                "Non A/C, Seater Sleeper, Bharat Benz",
+                "Non A/C, Seater Sleeper, Deluxe",
+                "Non A/C, Sleeper",
+                "Non A/C, Sleeper, Deluxe",
+                "Non A/C, Sleeper, Premium",
+                "Scania AC Multi Axle Sleeper (2+1)",
+                "Scania Multi-Axle AC Semi Sleeper (2+2)",
+                "VE A/C Seater / Sleeper (2+1)",
+                "VE A/C Sleeper (2+1)",
+                "VE Non A/C Sleeper (2+1)",
+                "Volvo 9600 Multi-Axle A/C Sleeper (2+1)",
+                "Volvo 9600 SLX Multi-Axle AC Sleeper (2+1)",
+                "Volvo A/C B11R Multi Axle Semi Sleeper (2+2)",
+                "Volvo A/C Semi Sleeper (2+2)",
+                "Volvo Multi Axle A/C Sleeper I-Shift B11R (2+1)",
+                "Volvo Multi-Axle A/C Sleeper (2+1)",
+                "Volvo Multi-Axle A/C Sleeper (2+1) ",
+                "Volvo Multi-Axle I-Shift A/C Semi Sleeper (2+2)",
+                "Volvo Multi-Axle I-Shift A/C Sleeper (2+1)"
+            ]
+    
+    routes = [
+                "hyderabad_bangalore",
+                "hyderabad_chennai"
+            ]
     weekdays = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday']
     
     input_data = {}
-    col1, col2 = st.columns(2)
-    
-    # Dynamic input based on feature name
-    col1, col2 = st.columns(2)
     
     # Auto-calculated fields to Hide
     auto_calculated = [
         'journey_is_weekend', 'is_night_departure', 'is_peak_hour',
         'is_last_minute', 'is_advance_booking', 
         'low_availability', 'very_low_availability', 'seats_sold_ratio',
-        'is_lower_berth', 'is_premium_seat',
+        'is_lower_berth', 'is_premium_seat', 'total_capacity',
         'is_volvo', 'is_sleeper', 'is_seater', 'is_multi_axle', 'is_AC'
     ]
     
-    # Dynamic input based on feature name
-    col_idx = 0
-    for feature in feature_names:
-        # Skip auto-calculated features
-        if feature in auto_calculated:
-            continue
-            
-        feature_lower = feature.lower()
-        help_text = feature_descriptions.get(feature, f"Enter {feature}")
-        
-        current_col = col1 if col_idx % 2 == 0 else col2
-        
-        with current_col:
-            # ===== SEAT NAME - DROPDOWN =====
-            if 'seat_name' in feature_lower:
-                if feature not in input_data:
-                    input_data[feature] = st.selectbox(
-                        f"🪑 {feature}",
-                        options=seat_names,
-                        help=help_text,
-                        key=f"input_{feature}"
-                    )
-                    col_idx += 1
-            
-            # ===== OPERATOR - DROPDOWN =====
-            elif 'operator' in feature_lower:
-                if feature not in input_data:
-                    input_data[feature] = st.selectbox(
-                        f"🚌 {feature}",
-                        options=operators,
-                        help=help_text,
-                        key=f"input_{feature}"
-                    )
-                    col_idx += 1
-            
-            # ===== BUS TYPE - DROPDOWN =====
-            elif 'bus_type' in feature_lower:
-                if feature not in input_data:
-                    input_data[feature] = st.selectbox(
-                        f"🚍 {feature}",
-                        options=bus_types,
-                        help=help_text,
-                        key=f"input_{feature}"
-                    )
-                    col_idx += 1
-            
-            # ===== ROUTE/SOURCE - DROPDOWN =====
-            elif 'source_collection' in feature_lower or 'route' in feature_lower:
-                if feature not in input_data:
-                    input_data[feature] = st.selectbox(
-                        f"🗺️ {feature}",
-                        options=routes,
-                        help=help_text,
-                        key=f"input_{feature}"
-                    )
-                    col_idx += 1
-            
-            # ===== WEEKDAY - DROPDOWN =====
-            elif feature == 'journey_weekday':
-                day_selected = st.selectbox(
-                    f"📅 {feature}",
-                    options=weekdays,
-                    help=help_text,
-                    key=f"input_{feature}"
-                )
-                input_data[feature] = weekdays.index(day_selected)  # Convert to 0-6
-                col_idx += 1
-            
-            # ===== DEPARTURE HOUR - DROPDOWN =====
-            elif feature == 'departure_hour':
-                hours = [f"{h:02d}:00" for h in range(24)]
-                hour_selected = st.selectbox(
-                    f"⏰ {feature}",
-                    options=hours,
-                    help=help_text,
-                    key=f"input_{feature}"
-                )
-                input_data[feature] = int(hour_selected.split(":")[0])
-                col_idx += 1
-            
-            # ===== SCRAPE HOUR - DROPDOWN =====
-            elif feature == 'scrape_hour':
-                hours = [f"{h:02d}:00" for h in range(24)]
-                hour_selected = st.selectbox(
-                    f"🕐 {feature}",
-                    options=hours,
-                    help=help_text,
-                    key=f"input_{feature}"
-                )
-                input_data[feature] = int(hour_selected.split(":")[0])
-                col_idx += 1
-            
-            # ===== AVAILABLE SEATS - SLIDER (0-50) =====
-            elif feature == 'available_seats':
-                input_data[feature] = st.slider(
-                    f"🪑 {feature}",
-                    min_value=0, max_value=50, value=25, step=1,
-                    help=help_text,
-                    key=f"input_{feature}"
-                )
-                st.caption(f"→ {50-input_data[feature]} booked, {input_data[feature]} available")
-                col_idx += 1
-            
-            # ===== WINDOW SEATS - SLIDER (0-25) =====
-            elif feature == 'window_seats':
-                input_data[feature] = st.slider(
-                    f"🪟 {feature}",
-                    min_value=0, max_value=25, value=10, step=1,
-                    help=help_text,
-                    key=f"input_{feature}"
-                )
-                col_idx += 1
-            
-            # ===== HOURS TO DEPARTURE - SLIDER =====
-            elif feature == 'hours_to_departure':
-                input_data[feature] = st.slider(
-                    f"⏱️ {feature}",
-                    min_value=0.0, max_value=720.0, value=72.0, step=6.0,
-                    help=help_text,
-                    key=f"input_{feature}"
-                )
-                days = int(input_data[feature] / 24)
-                hrs = int(input_data[feature] % 24)
-                st.caption(f"→ {days} days, {hrs} hours from now")
-                col_idx += 1
-            
-            # ===== DAYS TO JOURNEY - SLIDER =====
-            elif feature == 'days_to_journey':
-                input_data[feature] = st.slider(
-                    f"📆 {feature}",
-                    min_value=0, max_value=90, value=7, step=1,
-                    help=help_text,
-                    key=f"input_{feature}"
-                )
-                col_idx += 1
-            
-            # ===== DURATION HOURS - SLIDER =====
-            elif feature == 'duration_hours':
-                input_data[feature] = st.slider(
-                    f"🕐 {feature}",
-                    min_value=1.0, max_value=24.0, value=10.0, step=0.5,
-                    help=help_text,
-                    key=f"input_{feature}"
-                )
-                hrs = int(input_data[feature])
-                mins = int((input_data[feature] % 1) * 60)
-                st.caption(f"→ {hrs}h {mins}m travel")
-                col_idx += 1
-            
-            # ===== SEATS SOLD RATIO - SLIDER (0-1) =====
-            elif feature == 'seats_sold_ratio':
-                input_data[feature] = st.slider(
-                    f"📊 {feature}",
-                    min_value=0.0, max_value=1.0, value=0.5, step=0.05,
-                    help=help_text,
-                    key=f"input_{feature}"
-                )
-                pct = int(input_data[feature] * 100)
-                st.caption(f"→ {pct}% seats sold")
-                col_idx += 1
-            
-            # ===== BOOLEAN - CHECKBOX =====
-            elif any(word in feature_lower for word in ['is_', 'has_', 'bool', 'flag']):
-                input_data[feature] = st.checkbox(
-                    f"✓ {feature}",
-                    value=False,
-                    help=help_text,
-                    key=f"input_{feature}"
-                )
-                col_idx += 1
-            
-            # ===== DEFAULT - NUMBER INPUT =====
-            else:
-                input_data[feature] = st.number_input(
-                    f"🔢 {feature}",
-                    value=0.0,
-                    step=0.1,
-                    help=help_text,
-                    key=f"input_{feature}"
-                )
-                col_idx += 1
+    # Create tabs for better organization
+    tab1, tab2, tab3 = st.tabs(["🚌 Bus & Route", "🪑 Seat Details", "📅 Journey Timing"])
     
-    # Define categorical options for common fields
+    with tab1:
+        col1, col2 = st.columns(2)
+        
+        with col1:
+            if 'operator_name_le' in feature_names or 'operator_name' in feature_names:
+                feature = 'operator_name_le' if 'operator_name_le' in feature_names else 'operator_name'
+                input_data[feature] = st.selectbox(
+                    "🚌 Bus Operator",
+                    options=operators,
+                    help=feature_descriptions.get(feature, "Select bus operator"),
+                    key=f"input_{feature}"
+                )
+            
+            if 'source_collection_le' in feature_names or 'source_collection' in feature_names:
+                feature = 'source_collection_le' if 'source_collection_le' in feature_names else 'source_collection'
+                input_data[feature] = st.selectbox(
+                    "🗺️ Route",
+                    options=routes,
+                    help=feature_descriptions.get(feature, "Select route"),
+                    key=f"input_{feature}"
+                )
+        
+        with col2:
+            if 'bus_type_le' in feature_names or 'bus_type' in feature_names:
+                feature = 'bus_type_le' if 'bus_type_le' in feature_names else 'bus_type'
+                input_data[feature] = st.selectbox(
+                    "🚍 Bus Type",
+                    options=bus_types,
+                    help=feature_descriptions.get(feature, "Select bus type"),
+                    key=f"input_{feature}"
+                )
+            
+            if 'duration_hours' in feature_names:
+                input_data['duration_hours'] = st.slider(
+                    "🕐 Journey Duration (hours)",
+                    min_value=1.0, max_value=24.0, value=10.0, step=0.5,
+                    help=feature_descriptions.get('duration_hours', "Journey duration"),
+                    key="input_duration_hours"
+                )
+                hrs = int(input_data['duration_hours'])
+                mins = int((input_data['duration_hours'] % 1) * 60)
+                st.caption(f"→ {hrs}h {mins}m travel time")
+
+            # Add Total Capacity Input
+            input_data['total_capacity'] = st.number_input(
+                "🚌 Total Bus Capacity",
+                min_value=10, max_value=100, value=50, step=1,
+                help="Total number of seats in the bus (for occupancy calculation)",
+                key="input_total_capacity"
+            )
+    
+    with tab2:
+        col1, col2 = st.columns(2)
+        
+        with col1:
+            if 'seat_name_le' in feature_names or 'seat_name' in feature_names:
+                feature = 'seat_name_le' if 'seat_name_le' in feature_names else 'seat_name'
+                input_data[feature] = st.selectbox(
+                    "🪑 Seat Number",
+                    options=seat_names,
+                    help=feature_descriptions.get(feature, "Select seat"),
+                    key=f"input_{feature}"
+                )
+            
+            if 'seat_is_upper' in feature_names:
+                input_data['seat_is_upper'] = st.checkbox(
+                    "Upper Berth",
+                    value=False,
+                    help=feature_descriptions.get('seat_is_upper', "Is upper berth?"),
+                    key="input_seat_is_upper"
+                )
+            
+            if 'seat_is_ladies' in feature_names:
+                input_data['seat_is_ladies'] = st.checkbox(
+                    "Ladies Seat",
+                    value=False,
+                    help=feature_descriptions.get('seat_is_ladies', "Reserved for women?"),
+                    key="input_seat_is_ladies"
+                )
+        
+        with col2:
+            if 'available_seats' in feature_names:
+                input_data['available_seats'] = st.slider(
+                    "🪑 Available Seats",
+                    min_value=0, max_value=50, value=25, step=1,
+                    help=feature_descriptions.get('available_seats', "Seats available"),
+
+                    key="input_available_seats"
+                )
+                
+                booked_seats = input_data['total_capacity'] - input_data['available_seats']
+                # Ensure non-negative
+                booked_seats = max(0, booked_seats)
+                occupancy = (booked_seats / input_data['total_capacity']) * 100
+                st.caption(f"→ {booked_seats} booked ({occupancy:.0f}% full), {input_data['available_seats']} available")
+            
+            if 'window_seats' in feature_names:
+                input_data['window_seats'] = st.slider(
+                    "🪟 Window Seats Available",
+                    min_value=0, max_value=25, value=10, step=1,
+                    help=feature_descriptions.get('window_seats', "Window seats"),
+                    key="input_window_seats"
+                )
+            
+            if 'seat_is_horizontal' in feature_names:
+                input_data['seat_is_horizontal'] = st.checkbox(
+                    "Horizontal Sleeper",
+                    value=False,
+                    help=feature_descriptions.get('seat_is_horizontal', "Horizontal bed?"),
+                    key="input_seat_is_horizontal"
+                )
+    
+    with tab3:
+        col1, col2 = st.columns(2)
+        
+        with col1:
+            if 'journey_weekday' in feature_names:
+                day_selected = st.selectbox(
+                    "📅 Journey Day",
+                    options=weekdays,
+                    help=feature_descriptions.get('journey_weekday', "Day of journey"),
+                    key="input_journey_weekday"
+                )
+                input_data['journey_weekday'] = weekdays.index(day_selected)
+            
+            if 'departure_hour' in feature_names:
+                hours = [f"{h:02d}:00" for h in range(24)]
+                hour_selected = st.selectbox(
+                    "⏰ Departure Time",
+                    options=hours,
+                    index=18,  # Default to 6 PM
+                    help=feature_descriptions.get('departure_hour', "Departure time"),
+                    key="input_departure_hour"
+                )
+                input_data['departure_hour'] = int(hour_selected.split(":")[0])
+            
+            if 'scrape_hour' in feature_names:
+                current_hour = datetime.now().hour
+                hours = [f"{h:02d}:00" for h in range(24)]
+                hour_selected = st.selectbox(
+                    "🕐 Current Time",
+                    options=hours,
+                    index=current_hour,
+                    help=feature_descriptions.get('scrape_hour', "Current time"),
+                    key="input_scrape_hour"
+                )
+                input_data['scrape_hour'] = int(hour_selected.split(":")[0])
+        
+        with col2:
+            if 'hours_to_departure' in feature_names:
+                input_data['hours_to_departure'] = st.slider(
+                    "⏱️ Hours to Departure",
+                    min_value=0.0, max_value=720.0, value=72.0, step=6.0,
+                    help=feature_descriptions.get('hours_to_departure', "Hours until departure"),
+                    key="input_hours_to_departure"
+                )
+                days = int(input_data['hours_to_departure'] / 24)
+                hrs = int(input_data['hours_to_departure'] % 24)
+                st.caption(f"→ {days} days, {hrs} hours from now")
+            
+            if 'days_to_journey' in feature_names:
+                input_data['days_to_journey'] = st.slider(
+                    "📆 Days to Journey",
+                    min_value=0, max_value=90, value=7, step=1,
+                    help=feature_descriptions.get('days_to_journey', "Days in advance"),
+                    key="input_days_to_journey"
+                )
+    
+    # Handle remaining features not in tabs
+    remaining_features = [f for f in feature_names if f not in input_data and f not in auto_calculated]
+    
+    if remaining_features:
+        with st.expander("🔧 Advanced Options"):
+            col1, col2 = st.columns(2)
+            for idx, feature in enumerate(remaining_features):
+                current_col = col1 if idx % 2 == 0 else col2
+                with current_col:
+                    feature_lower = feature.lower()
+                    help_text = feature_descriptions.get(feature, f"Enter {feature}")
+                    
+                    if any(word in feature_lower for word in ['is_', 'has_', 'bool', 'flag']):
+                        input_data[feature] = st.checkbox(
+                            f"{feature}",
+                            value=False,
+                            help=help_text,
+                            key=f"input_{feature}"
+                        )
+                    else:
+                        input_data[feature] = st.number_input(
+                            f"{feature}",
+                            value=0.0,
+                            step=0.1,
+                            help=help_text,
+                            key=f"input_{feature}"
+                        )
     
     # Prediction button
-    st.divider()
+    st.markdown("<br>", unsafe_allow_html=True)
     
-    col1, col2, col3 = st.columns([1, 1, 1])
+    col1, col2, col3 = st.columns([1, 2, 1])
     with col2:
         predict_button = st.button(
-            "🎯 Make Prediction",
+            "🎯 Predict Price",
             type="primary",
             use_container_width=True
         )
     
+    # Auto-predict on parameter change (check if any input has changed)
+    # Create a hash of current inputs to detect changes
+    current_input_hash = hash(str(sorted(input_data.items())))
+    if 'last_input_hash' not in st.session_state:
+        st.session_state['last_input_hash'] = None
+    
+    # Auto-trigger prediction if inputs changed and model is loaded
+    auto_predict = False
+    if st.session_state['last_input_hash'] is not None and current_input_hash != st.session_state['last_input_hash']:
+        auto_predict = True
+    
+    st.session_state['last_input_hash'] = current_input_hash
+    
     # Make prediction
-    if predict_button:
-        try:
-            # Prepare features
-            X = prepare_input_data(input_data, feature_names, encoders)
-            
-            # Make prediction
-            if model_info["has_predict_proba"]:
-                # Classification model with probabilities
-                predictions = model.predict(X)
-                probabilities = model.predict_proba(X)
+    if predict_button or auto_predict:
+        with st.spinner("🔮 Analyzing journey details..."):
+            try:
+                # Prepare features
+                X = prepare_input_data(input_data, feature_names, encoders)
                 
-                st.header("💡 Prediction Result")
-                
-                col1, col2 = st.columns(2)
-                with col1:
-                    st.metric("Predicted Class", predictions[0])
-                
-                if hasattr(model, 'classes_'):
+                # Make prediction
+                if model_info["has_predict_proba"]:
+                    # Classification model with probabilities
+                    predictions = model.predict(X)
+                    probabilities = model.predict_proba(X)
+                    
+                    st.markdown("""
+                        <div class='result-card'>
+                            <h2 style='color: #667eea; text-align: center;'>💡 Prediction Result</h2>
+                        </div>
+                    """, unsafe_allow_html=True)
+                    
+                    col1, col2 = st.columns(2)
+                    with col1:
+                        st.metric("Predicted Class", predictions[0])
+                    
+                    if hasattr(model, 'classes_'):
+                        with col2:
+                            st.metric("Number of Classes", len(model.classes_))
+                        
+                        # Show probabilities
+                        st.subheader("Class Probabilities")
+                        prob_data = {
+                            'Class': model.classes_,
+                            'Probability': probabilities[0]
+                        }
+                        prob_df = pd.DataFrame(prob_data)
+                        prob_df['Probability'] = prob_df['Probability'].apply(lambda x: f"{x:.2%}")
+                        
+                        st.dataframe(prob_df, use_container_width=True, hide_index=True)
+                        
+                        # Visualize
+                        chart_data = pd.DataFrame({
+                            'Class': [str(c) for c in model.classes_],
+                            'Probability': probabilities[0]
+                        })
+                        st.bar_chart(chart_data.set_index('Class'), height=300)
+                else:
+                    # Regression model
+                    prediction = model.predict(X)[0]
+                    
+                    # Inverse Log Transform to get Price in currency
+                    final_price = np.expm1(prediction)
+                    
+                    # Beautiful result display
+                    st.markdown("""
+                        <div style='background: rgba(255,255,255,0.98); border-radius: 20px; padding: 3rem; margin: 2rem 0; box-shadow: 0 10px 40px rgba(0,0,0,0.2); text-align: center;'>
+                            <h2 style='color: #667eea; margin-bottom: 2rem;'>✅ Price Prediction</h2>
+                            <div style='background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); border-radius: 15px; padding: 2rem; margin: 1rem 0;'>
+                                <p style='color: white; font-size: 1.2rem; margin: 0; opacity: 0.9;'>Predicted Ticket Price</p>
+                                <h1 style='color: white; font-size: 4rem; margin: 1rem 0; font-weight: 700;'>₹ {:.2f}</h1>
+                            </div>
+                        </div>
+                    """.format(final_price), unsafe_allow_html=True)
+                    
+                    # Additional insights
+                    col1, col2 = st.columns(2)
+                    
+                    with col1:
+                        st.metric(
+                            "Price Category",
+                            "Premium" if final_price > 1000 else "Standard" if final_price > 500 else "Economy"
+                        )
+                    
                     with col2:
-                        st.metric("Number of Classes", len(model.classes_))
+                        st.metric(
+                            "Model Raw Output (Log Scale)",
+                            f"{prediction:.4f}"
+                        )
+                
+                # Store in session state
+                st.session_state['last_prediction'] = {
+                    'input': input_data,
+                    'timestamp': datetime.now().isoformat()
+                }
+                
+                # Show full feature set
+                with st.expander("🔍 View All Calculated Features"):
+                    st.write("These are the exact values sent to the model after feature engineering:")
+                    st.dataframe(X.T, use_container_width=True)
                     
-                    # Show probabilities for each class
-                    st.subheader("Class Probabilities")
-                    prob_data = {
-                        'Class': model.classes_,
-                        'Probability': probabilities[0]
-                    }
-                    prob_df = pd.DataFrame(prob_data)
-                    prob_df['Probability'] = prob_df['Probability'].apply(lambda x: f"{x:.2%}")
-                    
-                    st.dataframe(prob_df, use_container_width=True, hide_index=True)
-                    
-                    # Visualize probabilities
-                    chart_data = pd.DataFrame({
-                        'Class': [str(c) for c in model.classes_],
-                        'Probability': probabilities[0]
-                    })
-                    st.bar_chart(chart_data.set_index('Class'), height=300)
-            else:
-                # Regression model
-                prediction = model.predict(X)[0]
-                
-                # Inverse Log Transform to get Price in currency
-                # Assuming the model was trained on log(price)
-                final_price = np.expm1(prediction)
-                
-                st.divider()
-                st.header("✅ Prediction Result")
-                
-                # Display with better formatting
-                st.subheader(f"Predicted Price")
-                st.metric("🎯 Result", f"₹ {final_price:,.2f}")
-                st.caption(f"(Model Raw Output: {prediction:.4f})")
-                
-                st.info(
-                    f"💡 **What this means:**\n\n"
-                    f"Your model predicted: **{prediction:.4f}**\n\n"
-                    f"This value depends on:\n"
-                    f"- What your model was trained for (e.g., price prediction, score, count)\n"
-                    f"- The scale of your training data\n\n"
-                    f"**Check with your data scientist or model documentation** to understand what this number represents!"
-                )
-            
-            # Store in session state
-            st.session_state['last_prediction'] = {
-                'input': input_data,
-                'timestamp': datetime.now().isoformat()
-            }
-            
-            # Show full feature set used for prediction
-            with st.expander("🔍 View All Model Features (26 Calculated Features)"):
-                st.write("These are the exact values sent to the model after processing:")
-                st.dataframe(X.T, use_container_width=True)
-                
-        except Exception as e:
-            st.error(f"❌ Prediction Error: {str(e)}")
-            with st.expander("Error Details"):
-                st.code(traceback.format_exc())
+            except Exception as e:
+                st.error(f"❌ Prediction Error: {str(e)}")
+                with st.expander("Error Details"):
+                    st.code(traceback.format_exc())
     
-    # Additional tools
-    st.divider()
-    st.header("🛠️ Additional Tools")
-    
-    col1, col2 = st.columns(2)
-    
-    with col1:
-        if st.button("📊 Show Input as DataFrame"):
-            input_df = pd.DataFrame([input_data])
-            st.dataframe(input_df, use_container_width=True)
-    
-    with col2:
-        if st.button("💾 Download Prediction Template"):
-            template_df = pd.DataFrame([input_data])
-            csv = template_df.to_csv(index=False)
-            st.download_button(
-                label="Download CSV",
-                data=csv,
-                file_name="prediction_template.csv",
-                mime="text/csv"
-            )
-
-
+    # Footer
+    st.markdown("<br><br>", unsafe_allow_html=True)
+    st.markdown("""
+        <div style='text-align: center; color: rgba(255,255,255,0.6); padding: 2rem;'>
+            <p>Made with ❤️ using Streamlit | Powered by Machine Learning</p>
+        </div>
+    """, unsafe_allow_html=True)
 
 if __name__ == "__main__":
     main()
