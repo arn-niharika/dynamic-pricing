@@ -1713,13 +1713,7 @@ def main():
                 mins = int((input_data['duration_hours'] % 1) * 60)
                 st.caption(f"→ {hrs}h {mins}m travel time")
 
-            # Add Total Capacity Input
-            input_data['total_capacity'] = st.number_input(
-                "🚌 Total Bus Capacity",
-                min_value=10, max_value=100, value=50, step=1,
-                help="Total number of seats in the bus (for occupancy calculation)",
-                key="input_total_capacity"
-            )
+            # total_capacity is not taken from the user; calculations use a fixed default (50)
     
     with tab2:
         col1, col2 = st.columns(2)
@@ -1760,10 +1754,12 @@ def main():
                     key="input_available_seats"
                 )
                 
-                booked_seats = input_data['total_capacity'] - input_data['available_seats']
+                # Use fixed total_capacity (50) — not a user input
+                total_capacity = 50
+                booked_seats = total_capacity - input_data['available_seats']
                 # Ensure non-negative
                 booked_seats = max(0, booked_seats)
-                occupancy = (booked_seats / input_data['total_capacity']) * 100
+                occupancy = (booked_seats / total_capacity) * 100
                 st.caption(f"→ {booked_seats} booked ({occupancy:.0f}% full), {input_data['available_seats']} available")
             
             if 'window_seats' in feature_names:
